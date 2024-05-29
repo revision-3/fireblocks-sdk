@@ -1,4 +1,4 @@
-module github.com/caxqueiroz/fireblocks-sdk/v2
+module github.com/revision-3/fireblocks-sdk/v2
 
 go 1.16
 
