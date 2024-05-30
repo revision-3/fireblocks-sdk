@@ -11,10 +11,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gojek/heimdall/v7/hystrix"
-	"github.com/golang-jwt/jwt"
-	"github.com/shopspring/decimal"
-	log "github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -22,6 +18,11 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/gojek/heimdall/v7/hystrix"
+	"github.com/golang-jwt/jwt"
+	"github.com/shopspring/decimal"
+	log "github.com/sirupsen/logrus"
 )
 
 type FbKeyMgmt struct {
@@ -508,6 +509,34 @@ func (s *SDK) SetCustomerRefId(vaultAccountId string, customerRefId string, idem
 
 }
 
+func (s *SDK) UpdateVaultAccountName(vaultAccountId string, accountName string) error {
+
+	if len(accountName) == 0 {
+		return errors.New("account name is empty")
+	}
+
+	idempotencyKey := fmt.Sprintf("update-vault-account-name:%s", vaultAccountId)
+
+	payload := map[string]interface{}{
+		"name": accountName,
+	}
+
+	marshalled, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+
+	query := fmt.Sprintf("/v1/vault/accounts/%s", vaultAccountId)
+	_, err = s.changeRequest(query, marshalled, idempotencyKey, http.MethodPut)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+
+}
+
 //POST /v1/webhooks/resend
 
 func (s *SDK) ResendFailedWebhookEvents() error {
@@ -556,11 +585,12 @@ func (s *SDK) CreateVaultAccount(name string, hiddenOnUI bool, customerRefID str
 
 }
 
-//CreateVaultAsset
+// CreateVaultAsset
 // creates a new wallet under the VaultAccount
 // args:
-//     vaultAccountId
-//     assetId
+//
+//	vaultAccountId
+//	assetId
 func (s *SDK) CreateVaultAsset(vaultAccountId string, assetId string, idempotencyKey string) (CreateVaultAssetResponse, error) {
 
 	cmd := fmt.Sprintf("/v1/vault/accounts/%s/%s", vaultAccountId, assetId)
@@ -711,7 +741,7 @@ func (s *SDK) CreateInternalWalletAsset(walletId string, assetId string, address
 
 }
 
-//GetEstimateTxFee
+// GetEstimateTxFee
 // Get the estimate fee for a tx.
 func (s *SDK) GetEstimateTxFee(assetId string, amount string, source TransferPeerPath, destination DestinationTransferPeerPath, operation string) (EstimatedTransactionFeeResponse, error) {
 
