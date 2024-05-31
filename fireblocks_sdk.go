@@ -320,7 +320,7 @@ func (s *SDK) GetVaultAccountAsset(vaultAccountID string, assetID string) (Vault
 	var vaultAsset VaultAsset
 	returnedData, err := s.getRequest(query)
 	if err != nil {
-		log.Error(err)
+		return VaultAsset{}, err
 	}
 	err = json.Unmarshal([]byte(returnedData), &vaultAsset)
 	if err != nil {
