@@ -327,6 +327,12 @@ func (s *SDK) GetVaultAccountAsset(vaultAccountID string, assetID string) (Vault
 		log.Errorf("failed to parse payload: %s. %v", returnedData, err)
 		return VaultAsset{}, err
 	}
+
+	if vaultAsset == (VaultAsset{}) {
+		log.Printf("No asset data found for vault account ID %s and asset ID %s", vaultAccountID, assetID)
+		return VaultAsset{}, errors.New("no asset data available")
+	}
+
 	return vaultAsset, err
 
 }
