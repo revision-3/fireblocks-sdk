@@ -59,7 +59,6 @@ func (s secrets) Int63() int64 {
 }
 
 func (k *FbKeyMgmt) createAndSignJWTToken(path string, bodyJSON string) (string, error) {
-
 	token := &jwt.MapClaims{
 		"uri":      path,
 		"nonce":    k.rnd.Int63(),
@@ -93,7 +92,6 @@ type SDK struct {
 
 // NewInstance - create new type to handle Fireblocks API requests
 func NewInstance(pk []byte, ak string, url string, t time.Duration) *SDK {
-
 	if t == time.Duration(0) {
 		// use default
 		t = timeout
@@ -112,7 +110,6 @@ func NewInstance(pk []byte, ak string, url string, t time.Duration) *SDK {
 }
 
 func newCircuitBreakerHttpClient(t time.Duration) *hystrix.Client {
-
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: false,
 	}
@@ -126,7 +123,6 @@ func newCircuitBreakerHttpClient(t time.Duration) *hystrix.Client {
 
 // getRequest - internal method to handle API call to Fireblocks
 func (s *SDK) getRequest(path string) (string, error) {
-
 	urlEndPoint := s.apiBaseURL + path
 	token, err := s.kto.createAndSignJWTToken(path, "")
 	if err != nil {
@@ -170,7 +166,6 @@ func (s *SDK) getRequest(path string) (string, error) {
 }
 
 func (s *SDK) changeRequest(path string, payload []byte, idempotencyKey string, requestType string) (string, error) {
-
 	urlEndPoint := s.apiBaseURL + path
 	token, err := s.kto.createAndSignJWTToken(path, string(payload))
 	if err != nil {
@@ -214,11 +209,9 @@ func (s *SDK) changeRequest(path string, payload []byte, idempotencyKey string, 
 	}
 
 	return string(data), err
-
 }
 
 func (s *SDK) GetUsers() ([]User, error) {
-
 	returnedData, err := s.getRequest("/v1/users")
 	if err != nil {
 		log.Error(err)
@@ -237,7 +230,6 @@ func (s *SDK) GetUsers() ([]User, error) {
 
 // GetSupportedAssets - Gets all assets that are currently supported by Fireblocks API.
 func (s *SDK) GetSupportedAssets() ([]AssetTypeResponse, error) {
-
 	returnedData, err := s.getRequest("/v1/supported_assets")
 	if err != nil {
 		log.Error(err)
@@ -255,7 +247,6 @@ func (s *SDK) GetSupportedAssets() ([]AssetTypeResponse, error) {
 
 // GetVaultAccounts - gets all vault accounts for the tenant.
 func (s *SDK) GetVaultAccounts(namePrefix string, nameSuffix string, minAmountThreshold decimal.Decimal) ([]VaultAccount, error) {
-
 	query := "/v1/vault/accounts"
 	params := url.Values{}
 
@@ -289,7 +280,6 @@ func (s *SDK) GetVaultAccounts(namePrefix string, nameSuffix string, minAmountTh
 // GetVaultAccount - retrieve the vault account for the specified id.
 
 func (s *SDK) GetVaultAccount(vaultAccountID string) (VaultAccount, error) {
-
 	query := fmt.Sprintf("/v1/vault/accounts/%s", vaultAccountID)
 
 	returnedData, err := s.getRequest(query)
@@ -309,12 +299,10 @@ func (s *SDK) GetVaultAccount(vaultAccountID string) (VaultAccount, error) {
 	}
 
 	return vaultAccount, err
-
 }
 
 // GetVaultAccountAsset - Gets a single vault account asset
 func (s *SDK) GetVaultAccountAsset(vaultAccountID string, assetID string) (VaultAsset, error) {
-
 	query := fmt.Sprintf("/v1/vault/accounts/%s/%s", vaultAccountID, assetID)
 
 	var vaultAsset VaultAsset
@@ -334,12 +322,10 @@ func (s *SDK) GetVaultAccountAsset(vaultAccountID string, assetID string) (Vault
 	}
 
 	return vaultAsset, err
-
 }
 
 // GetAddresses - Gets deposit addresses for an asset in a vault account
 func (s *SDK) GetAddresses(vaultAccountID string, assetID string) ([]VaultAccountAssetAddress, error) {
-
 	query := fmt.Sprintf("/v1/vault/accounts/%s/%s/addresses", vaultAccountID, assetID)
 	returnedData, err := s.getRequest(query)
 	if err != nil {
@@ -354,7 +340,6 @@ func (s *SDK) GetAddresses(vaultAccountID string, assetID string) ([]VaultAccoun
 	}
 
 	return assetAddress, nil
-
 }
 
 // GetUnspentInputs - Gets utxo list for an asset in a vault account
@@ -397,12 +382,10 @@ func (s *SDK) GenerateNewAddress(vaultAccountID string, assetID string, descript
 	}
 
 	return createdAddress, nil
-
 }
 
 // SetAddressDescription - Sets the description of an existing address
 func (s *SDK) SetAddressDescription(vaultAccountID string, assetID string, description string, address string, tag string) (string, error) {
-
 	payload := make(map[string]interface{})
 
 	if len(description) > 0 {
@@ -434,7 +417,6 @@ func (s *SDK) GetNetworkConnectionByID(connectionID string) (string, error) {
 
 // GetExchangeAccounts - Gets all exchange accounts for your tenant
 func (s *SDK) GetExchangeAccounts() ([]ExchangeAccount, error) {
-
 	returnedData, err := s.getRequest("/v1/exchange_accounts")
 	if err != nil {
 		log.Error(err)
@@ -446,12 +428,10 @@ func (s *SDK) GetExchangeAccounts() ([]ExchangeAccount, error) {
 		return nil, err
 	}
 	return exchangeAccounts, nil
-
 }
 
 // GetExchangeAccount - Gets an exchange account for your tenant
 func (s *SDK) GetExchangeAccount(exchangeID string) (ExchangeAccount, error) {
-
 	query := fmt.Sprintf("/v1/exchange_accounts/%s", exchangeID)
 
 	returnedData, err := s.getRequest(query)
@@ -468,12 +448,10 @@ func (s *SDK) GetExchangeAccount(exchangeID string) (ExchangeAccount, error) {
 	}
 
 	return exchangeAccount, nil
-
 }
 
 // GetExchangeAccountAsset - Get a specific asset from an exchange account
 func (s *SDK) GetExchangeAccountAsset(exchangeID string, assetID string) (ExchangeAsset, error) {
-
 	query := fmt.Sprintf("/v1/exchange_accounts/%s/%s", exchangeID, assetID)
 
 	returnedData, err := s.getRequest(query)
@@ -490,11 +468,9 @@ func (s *SDK) GetExchangeAccountAsset(exchangeID string, assetID string) (Exchan
 	}
 
 	return exchangeAsset, nil
-
 }
 
 func (s *SDK) SetCustomerRefId(vaultAccountId string, customerRefId string, idempotencyKey string) error {
-
 	payload := map[string]interface{}{
 		"customerRefId": customerRefId,
 	}
@@ -512,11 +488,9 @@ func (s *SDK) SetCustomerRefId(vaultAccountId string, customerRefId string, idem
 	}
 
 	return nil
-
 }
 
 func (s *SDK) UpdateVaultAccountName(vaultAccountId string, accountName string) error {
-
 	if len(accountName) == 0 {
 		return errors.New("account name is empty")
 	}
@@ -540,25 +514,20 @@ func (s *SDK) UpdateVaultAccountName(vaultAccountId string, accountName string) 
 	}
 
 	return nil
-
 }
 
-//POST /v1/webhooks/resend
-
+// POST /v1/webhooks/resend
 func (s *SDK) ResendFailedWebhookEvents() error {
-
 	_, err := s.changeRequest("/v1/webhooks/resend", nil, "", http.MethodPost)
 	if err != nil {
 		log.Error(err)
 	}
 	return err
-
 }
 
 // CreateVaultAccount
 // name - vaultaccount name - usually we use as a join of userid + product_id (XXXX_YYYY)
 func (s *SDK) CreateVaultAccount(name string, hiddenOnUI bool, customerRefID string, autoFuel bool, idempotencyKey string) (VaultAccount, error) {
-
 	payload := map[string]interface{}{
 		"name":       name,
 		"hiddenOnUI": hiddenOnUI,
@@ -588,7 +557,6 @@ func (s *SDK) CreateVaultAccount(name string, hiddenOnUI bool, customerRefID str
 	}
 
 	return vaultAccount, err
-
 }
 
 // CreateVaultAsset
@@ -598,7 +566,6 @@ func (s *SDK) CreateVaultAccount(name string, hiddenOnUI bool, customerRefID str
 //	vaultAccountId
 //	assetId
 func (s *SDK) CreateVaultAsset(vaultAccountId string, assetId string, idempotencyKey string) (CreateVaultAssetResponse, error) {
-
 	cmd := fmt.Sprintf("/v1/vault/accounts/%s/%s", vaultAccountId, assetId)
 
 	var createVaultAssetResponse CreateVaultAssetResponse
@@ -617,13 +584,11 @@ func (s *SDK) CreateVaultAsset(vaultAccountId string, assetId string, idempotenc
 	}
 
 	return createVaultAssetResponse, err
-
 }
 
 // CreateExternalWallet
 // customerRefId - used for identifying our clients.
 func (s *SDK) CreateExternalWallet(name string, customerRefId string, idempotencyKey string) (ExternalWallet, error) {
-
 	payload := map[string]interface{}{
 		"name": name,
 	}
@@ -651,11 +616,9 @@ func (s *SDK) CreateExternalWallet(name string, customerRefId string, idempotenc
 	}
 
 	return externalWallet, nil
-
 }
 
 func (s *SDK) CreateExternalWalletAsset(walletId string, assetId string, address string, tag string, idempotencyKey string) (ExternalWalletAsset, error) {
-
 	cmd := fmt.Sprintf("/v1/external_wallets/%s/%s", walletId, assetId)
 
 	payload := map[string]interface{}{
@@ -684,13 +647,10 @@ func (s *SDK) CreateExternalWalletAsset(walletId string, assetId string, address
 	}
 
 	return extWalletAsset, nil
-
 }
 
-//CreateInternalWallet
-
+// CreateInternalWallet
 func (s *SDK) CreateInternalWallet(name string, customerRefId string, idempotencyKey string) (UnmanagedWallet, error) {
-
 	payload := map[string]interface{}{
 		"name":          name,
 		"customerRefId": customerRefId,
@@ -718,7 +678,6 @@ func (s *SDK) CreateInternalWallet(name string, customerRefId string, idempotenc
 // CreateInternalWalletAsset
 
 func (s *SDK) CreateInternalWalletAsset(walletId string, assetId string, address string, tag string, idempotencyKey string) (WalletAsset, error) {
-
 	cmd := fmt.Sprintf("/v1/internal_wallets/%s/%s", walletId, assetId)
 	payload := map[string]interface{}{
 		"address": address,
@@ -744,13 +703,11 @@ func (s *SDK) CreateInternalWalletAsset(walletId string, assetId string, address
 	}
 
 	return walletAsset, nil
-
 }
 
 // GetEstimateTxFee
 // Get the estimate fee for a tx.
 func (s *SDK) GetEstimateTxFee(assetId string, amount string, source TransferPeerPath, destination DestinationTransferPeerPath, operation string) (EstimatedTransactionFeeResponse, error) {
-
 	payload := map[string]interface{}{
 		"assetId":     assetId,
 		"amount":      amount,
@@ -784,7 +741,6 @@ func (s *SDK) GetEstimateTxFee(assetId string, amount string, source TransferPee
 	}
 
 	return estimatedTxFee, nil
-
 }
 
 // CreateTransaction -
@@ -793,9 +749,7 @@ func (s *SDK) CreateTransaction(assetId string, amount decimal.Decimal, source T
 	txType TransactionType, note string, cpuStaking string, networkStaking string,
 	autoStaking string, customerRefId string, extraParams ExtraParameters, destinations []DestinationTransferPeerPath,
 	feeLevel FeeLevel, failOnFee bool, maxFee string, gasLimit decimal.Decimal, replaceTxByHash string, idempotencyKey string,
-
 ) (CreateTransactionResponse, error) {
-
 	payload := CreateTransactionPayload{
 		AssetId:            assetId,
 		Source:             source,
@@ -862,13 +816,11 @@ func (s *SDK) CreateTransaction(assetId string, amount decimal.Decimal, source T
 }
 
 func (s *SDK) CreateTransactionWithPayload(payload CreateTransactionPayload, idempotencyKey string) (CreateTransactionResponse, error) {
-
 	marshalled, err := json.Marshal(payload)
 	if err != nil {
 		return CreateTransactionResponse{}, err
 	}
 	returnedData, err := s.changeRequest("/v1/transactions", marshalled, idempotencyKey, http.MethodPost)
-
 	if err != nil {
 		log.Error(err)
 	}
@@ -884,7 +836,6 @@ func (s *SDK) CreateTransactionWithPayload(payload CreateTransactionPayload, ide
 }
 
 func (s *SDK) GetVaultAssetsBalance(accountNamePrefix string, accountNameSuffix string) (string, error) {
-
 	params := url.Values{}
 	if len(accountNamePrefix) > 0 {
 		params.Add("accountNamePrefix", accountNamePrefix)
@@ -902,7 +853,6 @@ func (s *SDK) GetVaultAssetsBalance(accountNamePrefix string, accountNameSuffix 
 }
 
 func (s *SDK) GetVaultBalanceByAsset(assetId string) (string, error) {
-
 	query := fmt.Sprintf("/v1/vault/assets/%s", assetId)
 	return s.getRequest(query)
 }
@@ -911,7 +861,6 @@ func (s *SDK) GetVaultBalanceByAsset(assetId string) (string, error) {
 // assetId - the id of the asset to validate the address
 // address - the address to validate
 func (s *SDK) ValidateAddress(assetId string, address string) (AddressStatus, error) {
-
 	query := fmt.Sprintf("/v1/transactions/validate_address/%s/%s", assetId, address)
 
 	returnedData, err := s.getRequest(query)
@@ -932,7 +881,6 @@ func (s *SDK) ValidateAddress(assetId string, address string) (AddressStatus, er
 // GetTransactionById - get the transaction details
 // txId - transaction id
 func (s *SDK) GetTransactionById(txId string) (TransactionDetails, error) {
-
 	query := fmt.Sprintf("/v1/transactions/%s", txId)
 	returnedData, err := s.getRequest(query)
 	if err != nil {
@@ -947,11 +895,9 @@ func (s *SDK) GetTransactionById(txId string) (TransactionDetails, error) {
 	}
 
 	return transactionDetails, nil
-
 }
 
 func (s *SDK) GetExternalWallets() ([]ExternalWallet, error) {
-
 	returnedData, err := s.getRequest("/v1/external_wallets")
 	if err != nil {
 		log.Error(err)
@@ -966,11 +912,9 @@ func (s *SDK) GetExternalWallets() ([]ExternalWallet, error) {
 	}
 
 	return extWallets, nil
-
 }
 
 func (s *SDK) GetExternalWallet(externalWalletId string) (ExternalWallet, error) {
-
 	query := fmt.Sprintf("/v1/external_wallets/%s", externalWalletId)
 
 	returnedData, err := s.getRequest(query)
@@ -985,7 +929,6 @@ func (s *SDK) GetExternalWallet(externalWalletId string) (ExternalWallet, error)
 	}
 
 	return extWallet, nil
-
 }
 
 func getExtWallet(returnedData string) (ExternalWallet, error) {

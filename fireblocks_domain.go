@@ -13,7 +13,7 @@ type CreateTransactionPayload struct {
 	Fee                string                        `json:"fee,omitempty"`                // The total fee deducted by the exchange from the actual requested amount (serviceFee = amount - netAmount)
 	TreatAsGrossAmount bool                          `json:"treatAsGrossAmount,omitempty"` // For outgoing transactions, if true, the network fee is deducted from the requested amount
 	FailOnLowFee       bool                          `json:"failOnLowFee,omitempty"`
-	NetworkFee         string                        `json:"networkFee,omitempty"` //The fee paid to the network
+	NetworkFee         string                        `json:"networkFee,omitempty"` // The fee paid to the network
 	PriorityFee        string                        `json:"priorityFee,omitempty"`
 	FeeLevel           string                        `json:"feeLevel,omitempty"`
 	MaxFee             string                        `json:"maxFee,omitempty"`
@@ -37,14 +37,13 @@ type ExternalWalletAsset struct {
 	ActivationTime string                    `json:"activationTime"` // The time the wallet will be activated in case wallets activation posponed according to workspace definition
 	Address        string                    `json:"address"`        // The address of the wallet
 	Tag            string                    `json:"tag"`            // Destination tag (for XRP, used as memo for EOS/XLM) of the wallet, for SEN/Signet used as Bank Transfer Description
-
 }
 
 type ExternalWallet struct {
-	Id            string                `json:"id"`                      //The ID of the Unmanaged Wallet
+	Id            string                `json:"id"`                      // The ID of the Unmanaged Wallet
 	Name          string                `json:"name"`                    // Name of the Wallet Container
 	CustomerRefId string                `json:"customerRefId,omitempty"` //[optional] The ID for AML providers to associate the owner of funds with transactions
-	Assets        []ExternalWalletAsset `json:"assets"`                  //Array of the assets available in the exteral wallet
+	Assets        []ExternalWalletAsset `json:"assets"`                  // Array of the assets available in the exteral wallet
 }
 
 type UnmanagedWallet struct {
@@ -62,7 +61,6 @@ type WalletAsset struct {
 	ActivationTime string                    `json:"activationTime"` // The time the wallet will be activated in case wallets activation posponed according to workspace definition
 	Address        string                    `json:"address"`        // The address of the wallet
 	Tag            string                    `json:"tag"`            // Destination tag (for XRP, used as memo for EOS/XLM) of the wallet, for SEN/Signet used as Bank Transfer Description
-
 }
 
 type User struct {
@@ -71,7 +69,7 @@ type User struct {
 	LastName  string `json:"lastName"`  // Last name
 	Role      string `json:"role"`      // The role of the user in the workspace
 	Email     string `json:"email"`     // The email of the user
-	Enabled   bool   `json:"enabled"`   //The status of the user in the workspace
+	Enabled   bool   `json:"enabled"`   // The status of the user in the workspace
 }
 
 type ConfigChangeRequestStatus string
@@ -85,7 +83,7 @@ const (
 )
 
 type CreateAddressResponse struct {
-	Address       string `json:"address"`       //Address of the asset in a Vault Account, for BTC/LTC the address is in Segwit (Bech32) format, cash address format for BCH
+	Address       string `json:"address"`       // Address of the asset in a Vault Account, for BTC/LTC the address is in Segwit (Bech32) format, cash address format for BCH
 	LegacyAddress string `json:"legacyAddress"` // Legacy address format for BTC/LTC/BCH
 	Tag           string `json:"tag"`           // Destination tag for XRP, used as memo for EOS/XLM
 }
@@ -209,7 +207,7 @@ type TransactionDetails struct {
 	AmountUSD                     decimal.Decimal          `json:"amountUSD"`                     // The USD value of the requested amount
 	ServiceFee                    decimal.Decimal          `json:"ServiceFee"`                    // The total fee deducted by the exchange from the actual requested amount (serviceFee = amount - netAmount)
 	TreatAsGrossAmount            bool                     `json:"treatAsGrossAmount"`            // For outgoing transactions, if true, the network fee is deducted from the requested amount
-	NetworkFee                    decimal.Decimal          `json:"networkFee"`                    //The fee paid to the network
+	NetworkFee                    decimal.Decimal          `json:"networkFee"`                    // The fee paid to the network
 	CreatedAt                     int64                    `json:"createdAt"`                     // Unix timestamp
 	LastUpdated                   int64                    `json:"lastUpdated"`                   // Unix timestamp
 	Status                        TransactionStatus        `json:"status"`                        // The current status of the transaction
@@ -219,7 +217,7 @@ type TransactionDetails struct {
 	DestinationAddress            string                   `json:"destinationAddress"`            // Address where the asset were transfered
 	DestinationAddressDescription string                   `json:"destinationAddressDescription"` // Description of the address
 	DestinationTag                string                   `json:"destinationTag"`                // Destination tag (for XRP, used as memo for EOS/XLM) or Bank Transfer Description for Signet/SEN
-	SignedBy                      []string                 `json:"signedBy"`                      //Signers of the transaction
+	SignedBy                      []string                 `json:"signedBy"`                      // Signers of the transaction
 	CreatedBy                     string                   `json:"createdBy"`                     // Initiator of the transaction
 	RejectedBy                    string                   `json:"rejectedBy"`                    // User ID of the user that rejected the transaction (in case it was rejected)
 	AddressType                   string                   `json:"addressType"`                   // [ ONE_TIME, WHITELISTED ]
@@ -234,10 +232,9 @@ type TransactionDetails struct {
 	ReplacedTxHash                string                   `json:"replacedTxHash"`                // In case of an RBF transaction, the hash of the dropped transaction
 	ExternalTxId                  string                   `json:"externalTxId"`                  // Unique transaction ID provided by the user
 	Destinations                  []DestinationsResponse   `json:"destinations"`                  // For UTXO based assets, all outputs specified here
-	BlockInfo                     BlockInfo                `json:"blockInfo"`                     //The information of the block that this transaction was mined in, the blocks's hash and height
+	BlockInfo                     BlockInfo                `json:"blockInfo"`                     // The information of the block that this transaction was mined in, the blocks's hash and height
 	SignedMessages                []SignedMessage          `json:"signedMessages"`                // A list of signed messages returned for raw signing
 	ExtraParameters               map[string]interface{}   `json:"extraParameters"`               // Protocol / operation specific parameters.
-
 }
 
 type BlockInfo struct {
@@ -253,9 +250,9 @@ type TransactionFee struct {
 }
 
 type EstimatedTransactionFeeResponse struct {
-	Low    TransactionFee `json:"low"`    //Transactions with this fee will probably take longer to be mined
+	Low    TransactionFee `json:"low"`    // Transactions with this fee will probably take longer to be mined
 	Medium TransactionFee `json:"medium"` // Average transactions fee
-	High   TransactionFee `json:"high"`   //Transactions with this fee should be mined the fastest
+	High   TransactionFee `json:"high"`   // Transactions with this fee should be mined the fastest
 
 }
 
@@ -281,7 +278,6 @@ type DestinationsResponse struct {
 	DestinationAddressDescription string                   `json:"destinationAddressDescription"` // Description of the address
 	AmlScreeningResult            AmlScreeningResult       `json:"amlScreeningResult"`            // The result of the AML screening
 	CustomerRefId                 string                   `json:"customerRefId"`                 // The ID for AML providers to associate the owner of funds with transactions
-
 }
 
 type NetworkRecord struct {
@@ -295,7 +291,6 @@ type NetworkRecord struct {
 	OpType             string                   `json:"type"`               // Type of the operation
 	DestinationAddress string                   `json:"destinationAddress"` // Destination address
 	SourceAddress      string                   `json:"sourceAddress"`      // For account based assets only, the source address of the transaction
-
 }
 
 type NetworkStatus string
@@ -315,7 +310,7 @@ type AmlScreeningResult struct {
 
 type AmountInfo struct {
 	Amount          string `json:"amount"`          // If the transfer is a withdrawal from an exchange, the actual amount that was requested to be transferred. Otherwise, the requested amount
-	RequestedAmount string `json:"requestedAmount"` //The amount requested by the user
+	RequestedAmount string `json:"requestedAmount"` // The amount requested by the user
 	NetAmount       string `json:"NetAmount"`       // The net amount of the transaction, after fee deduction
 	AmountUSD       string `json:"amountUSD"`       // The USD value of the requested amount
 }
@@ -360,9 +355,9 @@ type VaultAccountAssetAddress struct {
 }
 
 type UnsignedMessage struct {
-	Content           string `json:"content"`           //message to be signed - hex format.
+	Content           string `json:"content"`           // message to be signed - hex format.
 	Bip44AddressIndex int    `json:"bip44AddressIndex"` //
-	Bib44Change       int    `json:"bib44Change"`       //bit44 change path level
+	Bib44Change       int    `json:"bib44Change"`       // bit44 change path level
 	DerivationPath    []int  `json:"derivationPath"`
 }
 
@@ -458,9 +453,8 @@ type WalletAssetWebhook struct {
 	Id             string `json:"id"`             // The ID of the wallet
 	Name           string `json:"name"`           // The name of wallet
 	Address        string `json:"address"`        // The address of the wallet
-	Tag            string `json:"tag"`            //Destination tag (for XRP, used as memo for EOS/XLM and as Bank Transfer Description for Signet/SEN) of the wallet
+	Tag            string `json:"tag"`            // Destination tag (for XRP, used as memo for EOS/XLM and as Bank Transfer Description for Signet/SEN) of the wallet
 	ActivationTime string `json:"activationTime"` // The time the wallet will be activated in case wallets activation posponed according to workspace definition
-
 }
 
 type ThirdPartyWebhook struct {
@@ -476,10 +470,12 @@ type ObjectAdded struct {
 	Data      interface{} `json:"data"`
 }
 
-type ExternalWalletAssetAdded ObjectAdded
-type ExchangeAccountAdded ObjectAdded
-type FiatAccountAdded ObjectAdded
-type NetworkConnectionAdded ObjectAdded
+type (
+	ExternalWalletAssetAdded ObjectAdded
+	ExchangeAccountAdded     ObjectAdded
+	FiatAccountAdded         ObjectAdded
+	NetworkConnectionAdded   ObjectAdded
+)
 
 type PeerType string
 
