@@ -1,6 +1,8 @@
 package fireblocks
 
 import (
+	"time"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -531,3 +533,21 @@ const (
 	TxContractCall                        = "CONTRACT_CALL"
 	TxOneTimeAddress                      = "ONE_TIME_ADDRESS"
 )
+
+// https://developers.fireblocks.com/reference/gettransactions
+type TransactionHistoryQuery struct {
+	Before         *time.Time `url:"before,omitempty,unixmilli"` // Unix timestamp in milliseconds. Returns only transactions created before the specified date
+	After          *time.Time `url:"after,omitempty,unixmilli"`  // Unix timestamp in milliseconds. Returns only transactions created after the specified date
+	Status         string     `url:"status,omitempty"`           // You can filter by one of the statuses
+	OrderBy        string     `url:"orderBy,omitempty"`          // The field to order the results by
+	Sort           string     `url:"sort,omitempty"`             // The direction to order the results by
+	Limit          int        `url:"limit,omitempty"`            // ≥ 1. Defaults to 200. Limits the number of results. If not provided, a limit of 200 will be used. The maximum allowed limit is 500
+	SourceType     string     `url:"sourceType,omitempty"`       // The source type of the transaction
+	SourceId       string     `url:"sourceId,omitempty"`         // The source ID of the transaction
+	DestType       string     `url:"destType,omitempty"`         // The destination type of the transaction
+	DestId         string     `url:"destId,omitempty"`           // The destination ID of the transaction
+	Assets         string     `url:"assets,omitempty"`           // A list of assets to filter by, separated by commas
+	TxHash         string     `url:"txHash,omitempty"`           // Returns only results with a specified txHash
+	SourceWalletId string     `url:"sourceWalletId,omitempty"`   // Returns only results where the source is a specific end user wallet
+	DestWalletId   string     `url:"destWalletId,omitempty"`     // Returns only results where the destination is a specific end user wallet
+}

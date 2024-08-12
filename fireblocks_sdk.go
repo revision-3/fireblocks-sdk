@@ -20,7 +20,8 @@ import (
 	"time"
 
 	"github.com/gojek/heimdall/v7/hystrix"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/go-querystring/query"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
 )
@@ -892,6 +893,33 @@ func (s *SDK) GetTransactionById(txId string) (TransactionDetails, error) {
 	if err != nil {
 		log.Error(err)
 		return TransactionDetails{}, err
+	}
+
+	return transactionDetails, nil
+}
+
+func (s *SDK) GetTransactionHistory(thquery TransactionHistoryQuery) ([]TransactionDetails, error) {
+	params, err := query.Values(thquery)
+	if err != nil {
+		return nil, err
+	}
+
+	query := "/v1/transactions"
+	if len(params) > 0 {
+		query += "?" + params.Encode()
+	}
+
+	returnedData, err := s.getRequest(query)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	var transactionDetails []TransactionDetails
+	err = json.Unmarshal([]byte(returnedData), &transactionDetails)
+	if err != nil {
+		log.Error(err)
+		return nil, err
 	}
 
 	return transactionDetails, nil
