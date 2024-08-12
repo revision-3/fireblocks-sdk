@@ -255,7 +255,6 @@ type EstimatedTransactionFeeResponse struct {
 	Low    TransactionFee `json:"low"`    // Transactions with this fee will probably take longer to be mined
 	Medium TransactionFee `json:"medium"` // Average transactions fee
 	High   TransactionFee `json:"high"`   // Transactions with this fee should be mined the fastest
-
 }
 
 type AddressStatus struct {
@@ -550,4 +549,26 @@ type TransactionHistoryQuery struct {
 	TxHash         string     `url:"txHash,omitempty"`           // Returns only results with a specified txHash
 	SourceWalletId string     `url:"sourceWalletId,omitempty"`   // Returns only results where the source is a specific end user wallet
 	DestWalletId   string     `url:"destWalletId,omitempty"`     // Returns only results where the destination is a specific end user wallet
+}
+
+// https://developers.fireblocks.com/reference/getpagedvaultaccounts
+type VaultAccountsQuery struct {
+	NamePrefix         string     `url:"namePrefix,omitempty"`
+	NameSuffix         string     `url:"nameSuffix,omitempty"`
+	MinAmountThreshold string     `url:"minAmountThreshold,omitempty"`
+	AssetID            string     `url:"assetId,omitempty"`
+	OrderBy            string     `url:"orderBy,omitempty"` // ASC | DESC
+	Before             *time.Time `url:"before,omitempty,unixmilli"`
+	After              *time.Time `url:"after,omitempty,unixmilli"`
+	Limit              int        `url:"limit,omitempty"`
+}
+
+type VaultAccountsResponse struct {
+	Accounts []VaultAccount `json:"accounts"`
+	Paging   struct {
+		Before string `json:"before"`
+		After  string `json:"after"`
+	} `json:"paging"`
+	PreviousURL string `json:"previousUrl"`
+	NextURL     string `json:"nextUrl"`
 }

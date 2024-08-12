@@ -247,32 +247,35 @@ func (s *SDK) GetSupportedAssets() ([]AssetTypeResponse, error) {
 }
 
 // GetVaultAccounts - gets all vault accounts for the tenant.
-func (s *SDK) GetVaultAccounts(namePrefix string, nameSuffix string, minAmountThreshold decimal.Decimal) ([]VaultAccount, error) {
-	query := "/v1/vault/accounts"
-	params := url.Values{}
+func (s *SDK) GetVaultAccounts(vaquery VaultAccountsQuery) ([]VaultAccount, error) {
+	params, err := query.Values(vaquery)
+	if err != nil {
+		return nil, err
+	}
 
-	if namePrefix != "" {
-		params.Add("namePrefix", namePrefix)
-	}
-	if nameSuffix != "" {
-		params.Add("nameSuffix", nameSuffix)
-	}
-	if minAmountThreshold.GreaterThan(decimal.NewFromFloat(0.0)) {
-		params.Add("minAmountThreshold", fmt.Sprintf("%s", minAmountThreshold))
-	}
+	query := "/v1/vault/accounts_paged"
 	if len(params) > 0 {
-		query = query + "?" + params.Encode()
+		query += "?" + params.Encode()
 	}
 
-	returnedData, err := s.getRequest(query)
-	if err != nil {
-		return nil, err
-	}
 	var vaultAccounts []VaultAccount
-	err = json.Unmarshal([]byte(returnedData), &vaultAccounts)
-	if err != nil {
-		log.Error(err)
-		return nil, err
+
+	for query != "" {
+		returnedData, err := s.getRequest(query)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+
+		var res VaultAccountsResponse
+		err = json.Unmarshal([]byte(returnedData), &res)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+
+		vaultAccounts = append(vaultAccounts, res.Accounts...)
+		query = res.NextURL
 	}
 
 	return vaultAccounts, nil
