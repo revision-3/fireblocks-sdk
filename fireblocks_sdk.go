@@ -809,7 +809,7 @@ func (s *SDK) CreateTransaction(assetId string, amount decimal.Decimal, source T
 	}
 
 	if extraParams != (ExtraParameters{}) {
-		payload.ExtraParameters = extraParams
+		payload.ExtraParameters = &extraParams
 	}
 
 	if len(destinations) > 0 {

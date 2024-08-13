@@ -23,7 +23,7 @@ type CreateTransactionPayload struct {
 	Operation          string                        `json:"operation"`                 // Default operation is "TRANSFER"
 	CustomerRefId      string                        `json:"customerRefId,omitempty"`   // The ID for AML providers to associate the owner of funds with transactions
 	ReplacedTxHash     string                        `json:"replacedTxHash,omitempty"`  //
-	ExtraParameters    ExtraParameters               `json:"extraParameters,omitempty"` // Protocol / operation specific parameters.
+	ExtraParameters    *ExtraParameters              `json:"extraParameters,omitempty"` // Protocol / operation specific parameters.
 	ExternalTxId       string                        `json:"externalTxId,omitempty"`
 	WaitForStatus      bool                          `json:"waitForStatus,omitempty"`
 	GasPrice           string                        `json:"gasPrice,omitempty"`
@@ -385,9 +385,9 @@ type TransferPeerPath struct {
 }
 
 type DestinationTransferPeerPath struct {
-	TPeerId   string         `json:"id"`
-	TPeerType PeerType       `json:"type"`
-	Ota       OneTimeAddress `json:"oneTimeAddress"`
+	TPeerId   string          `json:"id"`
+	TPeerType PeerType        `json:"type"`
+	Ota       *OneTimeAddress `json:"oneTimeAddress,omitempty"`
 }
 
 type VaultAccount struct {
