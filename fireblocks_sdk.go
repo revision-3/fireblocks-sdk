@@ -328,6 +328,28 @@ func (s *SDK) GetVaultAccountAsset(vaultAccountID string, assetID string) (Vault
 	return vaultAsset, err
 }
 
+func (s *SDK) VaultAccountAssetAddress(vaultAccountID string, assetID string) (VaultAccountAssetAddress, error) {
+	query := fmt.Sprintf("/v1/vault/accounts/%s/%s/addresses_paginated", vaultAccountID, assetID)
+	returnedData, err := s.getRequest(query)
+	if err != nil {
+		return VaultAccountAssetAddress{}, err
+	}
+
+	var response struct {
+		Addresses []VaultAccountAssetAddress `json:"addresses"`
+	}
+	err = json.Unmarshal([]byte(returnedData), &response)
+	if err != nil {
+		return VaultAccountAssetAddress{}, err
+	}
+
+	if len(response.Addresses) == 0 {
+		return VaultAccountAssetAddress{}, errors.New("no addresses found")
+	}
+
+	return response.Addresses[0], nil
+}
+
 // GetAddresses - Gets deposit addresses for an asset in a vault account
 func (s *SDK) GetAddresses(vaultAccountID string, assetID string) ([]VaultAccountAssetAddress, error) {
 	query := fmt.Sprintf("/v1/vault/accounts/%s/%s/addresses", vaultAccountID, assetID)
