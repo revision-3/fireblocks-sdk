@@ -328,7 +328,7 @@ func (s *SDK) GetVaultAccountAsset(vaultAccountID string, assetID string) (Vault
 	return vaultAsset, err
 }
 
-func (s *SDK) VaultAccountAssetAddress(vaultAccountID string, assetID string) (VaultAccountAssetAddress, error) {
+func (s *SDK) GetVaultAccountAssetAddress(vaultAccountID string, assetID string) (VaultAccountAssetAddress, error) {
 	query := fmt.Sprintf("/v1/vault/accounts/%s/%s/addresses_paginated", vaultAccountID, assetID)
 	returnedData, err := s.getRequest(query)
 	if err != nil {
