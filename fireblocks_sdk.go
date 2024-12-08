@@ -161,6 +161,7 @@ func (s *SDK) getRequest(path string) (string, error) {
 	if response.StatusCode >= 300 {
 		errMsg := fmt.Sprintf("fireblocks server: %s \n %s", response.Status, string(data))
 		log.Warning(errMsg)
+		return string(data), fmt.Errorf("HTTP %d: %s", response.StatusCode, errMsg)
 	}
 
 	return string(data), err
@@ -207,6 +208,7 @@ func (s *SDK) changeRequest(path string, payload []byte, idempotencyKey string, 
 	if response.StatusCode >= 300 {
 		errMsg := fmt.Sprintf("fireblocks server: %s \n %s", response.Status, string(data))
 		log.Warning(errMsg)
+		return string(data), fmt.Errorf("HTTP %d: %s", response.StatusCode, errMsg)
 	}
 
 	return string(data), err
